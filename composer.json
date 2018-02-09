@@ -1,0 +1,17 @@
+{
+    "name": "alexsancho/wp-core-blocker",
+    "description": "Disables WP from contacting wp.org servers and disables users from installing anything in wp-admin.",
+    "type": "wordpress-muplugin",
+    "license": "MIT",
+    "authors":[
+        {
+            "name": "Alex Sancho",
+            "homepage": "https://github.com/alexsancho",
+            "role": "developer"
+        }
+    ],
+    "require": {
+        "roave/security-advisories": "dev-master",
+        "composer/installers": "~1.0"
+    }
+}
