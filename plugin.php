@@ -5,7 +5,7 @@
  * Description: Disables WP from contacting wp.org servers and disables users from installing anything in wp-admin.
  * Author: Alex Sancho
  * Author URI: http://github.com/alexsancho
- * Version: 0.2.3
+ * Version: 1.0.0
  * Requires WP: 4.4
  * GitHub Plugin URI: https://github.com/alexsancho/wp-core-blocker
  * License URI: https://opensource.org/licenses/MIT
