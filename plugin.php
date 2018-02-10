@@ -32,7 +32,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 			add_action( 'admin_init', [ __CLASS__, 'remove_schedule_hook' ] );
 
 			// Disable gravatars
-			if ( defined( 'WP_CORE_BLOCKER_DISABLE_GRAVATAR' ) && WP_CORE_BLOCKER_DISABLE_GRAVATAR ) {
+			if ( \defined( 'WP_CORE_BLOCKER_DISABLE_GRAVATAR' ) && WP_CORE_BLOCKER_DISABLE_GRAVATAR ) {
 				add_filter( 'get_avatar', [ __CLASS__, 'replace_gravatar' ], 1, 5 );
 				add_filter( 'default_avatar_select', [ __CLASS__, 'default_avatar' ] );
 			}
@@ -130,12 +130,12 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 				// Add back the upload tab.
 				add_action( 'install_themes_upload', 'install_themes_upload', 10, 0 );
 
-				// Define core contants for more protection.
-				if ( ! defined( 'AUTOMATIC_UPDATER_DISABLED' ) ) {
-					define( 'AUTOMATIC_UPDATER_DISABLED', true );
+				// Define core constants for more protection.
+				if ( ! \defined( 'AUTOMATIC_UPDATER_DISABLED' ) ) {
+					\define( 'AUTOMATIC_UPDATER_DISABLED', true );
 				}
-				if ( ! defined( 'WP_AUTO_UPDATE_CORE' ) ) {
-					define( 'WP_AUTO_UPDATE_CORE', false );
+				if ( ! \defined( 'WP_AUTO_UPDATE_CORE' ) ) {
+					\define( 'WP_AUTO_UPDATE_CORE', false );
 				}
 			}
 		}
@@ -145,7 +145,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 */
 		public static function enabled() {
 			// Bail if CLI.
-			return ! ( defined( 'WP_CLI' ) && WP_CLI );
+			return ! ( \defined( 'WP_CLI' ) && WP_CLI );
 		}
 
 		/**
@@ -282,7 +282,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		public static function prevent_auto_updates( $caps, $cap ) {
 
 			// Check for being enabled and look for specific cap requirements.
-			if ( self::enabled() && in_array( $cap, [ 'install_plugins', 'install_themes', 'update_plugins', 'update_themes', 'update_core' ], false ) ) {
+			if ( self::enabled() && \in_array( $cap, [ 'install_plugins', 'install_themes', 'update_plugins', 'update_themes', 'update_core' ], false ) ) {
 				$caps[] = 'do_not_allow';
 			}
 
@@ -303,7 +303,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 			}
 
 			// Do a quick check to make sure we can remove things.
-			if ( ! function_exists( 'remove_action' ) ) {
+			if ( ! \function_exists( 'remove_action' ) ) {
 				return;
 			}
 
@@ -357,7 +357,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		/**
 		 * Hijack the themes api setup to bypass the API call.
 		 *
-		 * @param object $args    Arguments used to query for installer pages from the Themes API.
+		 * @param object|bool $args    Arguments used to query for installer pages from the Themes API.
 		 * @param string $action  Requested action. Likely values are 'theme_information',
 		 *                        'feature_list', or 'query_themes'.
 		 *
@@ -377,7 +377,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		/**
 		 * Always send back that the latest version of WordPress is the one we're running
 		 *
-		 * @return object     the modified output with our information
+		 * @return object|bool     the modified output with our information
 		 */
 		public static function last_checked_core() {
 
@@ -400,7 +400,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		/**
 		 * Always send back that the latest version of our theme is the one we're running
 		 *
-		 * @return object     the modified output with our information
+		 * @return object|bool     the modified output with our information
 		 */
 		public static function last_checked_themes() {
 
@@ -417,6 +417,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 
 			// Build my theme data array.
 			foreach ( wp_get_themes() as $theme ) {
+				/* @var \WP_Theme $theme */
 				$data[ $theme->get_stylesheet() ] = $theme->get( 'Version' );
 			}
 
@@ -432,7 +433,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		/**
 		 * Always send back that the latest version of our plugins are the one we're running
 		 *
-		 * @return object     the modified output with our information
+		 * @return object|bool     the modified output with our information
 		 */
 		public static function last_checked_plugins() {
 
@@ -487,7 +488,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 
 			foreach ( $installed as $lang ) {
 
-				// Try to mimick the data that wordpress puts into 'available_translations' transient
+				// Try to mimic the data that wordpress puts into 'available_translations' transient
 				$settings = [
 					'language' => $lang,
 					'iso'      => [ $lang ],
@@ -574,7 +575,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @param  array $nonmenu_tabs All the tabs displayed.
 		 *
-		 * @return array $nonmenu_tabs  The remaining tabs.
+		 * @return array  The remaining tabs.
 		 */
 		public static function plugin_add_tabs( $nonmenu_tabs ) {
 
@@ -603,13 +604,19 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 } //end class_exists
 
 if ( ! class_exists( __NAMESPACE__ . '\CoreBlocker_WP_Error' ) ) {
-
+	/**
+	 * Class Core_Blocker_WP_Error
+	 *
+	 * @package Asancho\helper
+	 */
 	class Core_Blocker_WP_Error extends WP_Error {
-
-		public function __tostring() {
+		/**
+		 * @return string
+		 */
+		public function __toString() {
 			$data = $this->get_error_data();
 
-			return $data['return'];
+			return (string) $data['return'];
 		}
 
 	}
