@@ -1,4 +1,5 @@
 # WP Plugin: WP Core Blocker
+[![Build Status](https://travis-ci.org/alexsancho/wp-core-blocker.svg?branch=master)](https://travis-ci.org/alexsancho/wp-core-blocker)
 
 ## Installation
 Preferred installation way is with composer:
