@@ -12,7 +12,7 @@
     ],
     "require": {
         "roave/security-advisories": "dev-master",
-        "composer/installers": "~1.0"
+        "composer/installers": "^1.0.0"
     },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "*",
