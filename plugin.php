@@ -5,10 +5,33 @@
  * Description: Disables WP from contacting wp.org servers and disables users from installing anything in wp-admin.
  * Author: Alex Sancho
  * Author URI: http://github.com/alexsancho
- * Version: 1.0.0
+ * Version: 0.2.3
  * Requires WP: 4.4
  * GitHub Plugin URI: https://github.com/alexsancho/wp-core-blocker
- * License URI: https://opensource.org/licenses/MIT
+ */
+
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2018 Alex Sancho
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 
 namespace Asancho\helper;
@@ -45,7 +68,6 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 			add_filter( 'bulk_actions-themes', [ __CLASS__, 'remove_bulk_actions' ] );
 			add_filter( 'bulk_actions-plugins-network', [ __CLASS__, 'remove_bulk_actions' ] );
 			add_filter( 'bulk_actions-themes-network', [ __CLASS__, 'remove_bulk_actions' ] );
-
 
 			// Admin UI items.
 			add_action( 'admin_menu', [ __CLASS__, 'admin_menu_items' ], 9999 );
@@ -130,7 +152,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 				// Add back the upload tab.
 				add_action( 'install_themes_upload', 'install_themes_upload', 10, 0 );
 
-				// Define core constants for more protection.
+				// Define core contants for more protection.
 				if ( ! \defined( 'AUTOMATIC_UPDATER_DISABLED' ) ) {
 					\define( 'AUTOMATIC_UPDATER_DISABLED', true );
 				}
@@ -282,7 +304,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		public static function prevent_auto_updates( $caps, $cap ) {
 
 			// Check for being enabled and look for specific cap requirements.
-			if ( self::enabled() && \in_array( $cap, [ 'install_plugins', 'install_themes', 'update_plugins', 'update_themes', 'update_core' ], false ) ) {
+			if ( self::enabled() && in_array( $cap, [ 'install_plugins', 'install_themes', 'update_plugins', 'update_themes', 'update_core' ], false ) ) {
 				$caps[] = 'do_not_allow';
 			}
 
@@ -303,7 +325,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 			}
 
 			// Do a quick check to make sure we can remove things.
-			if ( ! \function_exists( 'remove_action' ) ) {
+			if ( ! function_exists( 'remove_action' ) ) {
 				return;
 			}
 
@@ -357,7 +379,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		/**
 		 * Hijack the themes api setup to bypass the API call.
 		 *
-		 * @param object|bool $args    Arguments used to query for installer pages from the Themes API.
+		 * @param object $args    Arguments used to query for installer pages from the Themes API.
 		 * @param string $action  Requested action. Likely values are 'theme_information',
 		 *                        'feature_list', or 'query_themes'.
 		 *
@@ -377,7 +399,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		/**
 		 * Always send back that the latest version of WordPress is the one we're running
 		 *
-		 * @return object|bool     the modified output with our information
+		 * @return object     the modified output with our information
 		 */
 		public static function last_checked_core() {
 
@@ -400,7 +422,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		/**
 		 * Always send back that the latest version of our theme is the one we're running
 		 *
-		 * @return object|bool     the modified output with our information
+		 * @return object     the modified output with our information
 		 */
 		public static function last_checked_themes() {
 
@@ -417,7 +439,6 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 
 			// Build my theme data array.
 			foreach ( wp_get_themes() as $theme ) {
-				/* @var \WP_Theme $theme */
 				$data[ $theme->get_stylesheet() ] = $theme->get( 'Version' );
 			}
 
@@ -433,7 +454,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		/**
 		 * Always send back that the latest version of our plugins are the one we're running
 		 *
-		 * @return object|bool     the modified output with our information
+		 * @return object     the modified output with our information
 		 */
 		public static function last_checked_plugins() {
 
@@ -488,7 +509,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 
 			foreach ( $installed as $lang ) {
 
-				// Try to mimic the data that wordpress puts into 'available_translations' transient
+				// Try to mimick the data that wordpress puts into 'available_translations' transient
 				$settings = [
 					'language' => $lang,
 					'iso'      => [ $lang ],
@@ -575,7 +596,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @param  array $nonmenu_tabs All the tabs displayed.
 		 *
-		 * @return array  The remaining tabs.
+		 * @return array $nonmenu_tabs  The remaining tabs.
 		 */
 		public static function plugin_add_tabs( $nonmenu_tabs ) {
 
@@ -604,19 +625,13 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 } //end class_exists
 
 if ( ! class_exists( __NAMESPACE__ . '\CoreBlocker_WP_Error' ) ) {
-	/**
-	 * Class Core_Blocker_WP_Error
-	 *
-	 * @package Asancho\helper
-	 */
+
 	class Core_Blocker_WP_Error extends WP_Error {
-		/**
-		 * @return string
-		 */
-		public function __toString() {
+
+		public function __tostring() {
 			$data = $this->get_error_data();
 
-			return (string) $data['return'];
+			return $data['return'];
 		}
 
 	}
