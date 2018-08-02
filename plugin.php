@@ -230,7 +230,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 
 			// Swap out the file for a base64 encoded image.
 			$image  = apply_filters( 'local_avatar', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==' );
-			$avatar = "<img alt='{$alt}' src='{$image}' class='avatar avatar-{$size} photo' height='{$size}' width='{$size}' style='background:#eee;' />";
+			$avatar = "<img alt='{$alt}' src='{$image}' class='avatar avatar-{$size} photo' height='{$size}' width='{$size}' style='background:transparent;' />";
 
 			// Return the avatar.
 			return $avatar;
