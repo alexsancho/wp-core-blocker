@@ -36,9 +36,6 @@
 
 namespace Asancho\helper;
 
-use WP_Error;
-use stdClass;
-
 // Ensure the class has not already been loaded.
 if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 
@@ -221,7 +218,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @return string `<img>` tag for the user's avatar.
 		 */
-		public static function replace_gravatar( $avatar, $id_or_email, $size, $default, $alt ) {
+		public static function replace_gravatar( $avatar, $id_or_email, $size, $default, $alt ) : string {
 
 			// Bail if disabled.
 			if ( ! self::enabled() ) {
@@ -229,8 +226,8 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 			}
 
 			// Swap out the file for a base64 encoded image.
-			$image  = apply_filters( 'local_avatar', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==' );
-			$avatar = "<img alt='{$alt}' src='{$image}' class='avatar avatar-{$size} photo' height='{$size}' width='{$size}' style='background:transparent;' />";
+            $image  = apply_filters( 'local_avatar', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==' );
+            $avatar = "<img alt='{$alt}' src='{$image}' class='avatar avatar-{$size} photo' height='{$size}' width='{$size}' style='background:transparent;' />";
 
 			// Return the avatar.
 			return $avatar;
@@ -243,7 +240,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @return string               Updated list with images removed
 		 */
-		public static function default_avatar( $avatar_list ) {
+		public static function default_avatar( $avatar_list ) : string {
 
 			// Bail if disabled.
 			if ( ! self::enabled() ) {
@@ -262,7 +259,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @return string The URL to redirect to.
 		 */
-		protected static function get_redirect() {
+		protected static function get_redirect() : string {
 
 			// Return the args for the actual redirect.
 			$redirect = remove_query_arg( [
@@ -301,10 +298,10 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @return array The user's filtered capabilities.
 		 */
-		public static function prevent_auto_updates( $caps, $cap ) {
+		public static function prevent_auto_updates( $caps, $cap ) : array {
 
 			// Check for being enabled and look for specific cap requirements.
-			if ( self::enabled() && in_array( $cap, [ 'install_plugins', 'install_themes', 'update_plugins', 'update_themes', 'update_core' ], false ) ) {
+			if ( self::enabled() && \in_array( $cap, [ 'install_plugins', 'install_themes', 'update_plugins', 'update_themes', 'update_core' ], false ) ) {
 				$caps[] = 'do_not_allow';
 			}
 
@@ -325,7 +322,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 			}
 
 			// Do a quick check to make sure we can remove things.
-			if ( ! function_exists( 'remove_action' ) ) {
+			if ( ! \function_exists( 'remove_action' ) ) {
 				return;
 			}
 
@@ -383,7 +380,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 * @param string $action  Requested action. Likely values are 'theme_information',
 		 *                        'feature_list', or 'query_themes'.
 		 *
-		 * @return bool           true or false depending on the type of query
+		 * @return bool|object true or false depending on the type of query
 		 */
 		public static function bypass_theme_api( $args, $action ) {
 
@@ -399,7 +396,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		/**
 		 * Always send back that the latest version of WordPress is the one we're running
 		 *
-		 * @return object     the modified output with our information
+		 * @return bool|object The modified output with our information
 		 */
 		public static function last_checked_core() {
 
@@ -422,7 +419,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		/**
 		 * Always send back that the latest version of our theme is the one we're running
 		 *
-		 * @return object     the modified output with our information
+		 * @return bool|object The modified output with our information
 		 */
 		public static function last_checked_themes() {
 
@@ -454,7 +451,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		/**
 		 * Always send back that the latest version of our plugins are the one we're running
 		 *
-		 * @return object     the modified output with our information
+		 * @return bool|object The modified output with our information
 		 */
 		public static function last_checked_plugins() {
 
@@ -470,7 +467,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 			$data = [];
 
 			// Add our plugin file if we don't have it.
-			if ( ! function_exists( 'get_plugins' ) ) {
+			if ( ! \function_exists( 'get_plugins' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/plugin.php';
 			}
 
@@ -490,8 +487,10 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 
 		/**
 		 * Returns installed languages instead of all possibly available languages
-		 */
-		public static function available_translations() {
+         *
+         * @return array
+         */
+		public static function available_translations() : array {
 
 			// include long predefined list of all available languages
 			// It includes a function: core_blocker_get_languages()
@@ -534,20 +533,20 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @return array         An empty array, or the original items if not enabled.
 		 */
-		public static function remove_update_array( $items ) {
+		public static function remove_update_array( $items ) : array {
 			return ! self::enabled() ? $items : [];
 		}
 
 		/**
 		 * Returns list of plugins which tells that there's no updates
 		 *
-		 * @param array $current Empty array
+		 * @param mixed $current Empty array.
 		 *
-		 * @return array            Lookalike data which is stored in site transient 'update_plugins'
+		 * @return array Lookalike data which is stored in site transient 'update_plugins'
 		 */
-		public static function remove_plugin_updates( $current ) {
+		public static function remove_plugin_updates( $current ) : array {
 			if ( ! $current ) {
-				$current               = new stdClass;
+				$current               = new \stdClass();
 				$current->last_checked = time();
 				$current->translations = [];
 
@@ -569,7 +568,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @return array $actions  The remaining actions
 		 */
-		public static function remove_bulk_actions( $actions ) {
+		public static function remove_bulk_actions( $actions ) : array {
 
 			// Bail if disabled.
 			if ( ! self::enabled() ) {
@@ -577,7 +576,8 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 			}
 
 			// Set an array of items to be removed with optional filter.
-			if ( false === $remove = apply_filters( 'core_blocker_bulk_items', [ 'update-selected', 'update', 'upgrade' ] ) ) {
+            $remove = apply_filters( 'core_blocker_bulk_items', [ 'update-selected', 'update', 'upgrade' ] );
+			if ( false === $remove ) {
 				return $actions;
 			}
 
@@ -598,7 +598,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @return array $nonmenu_tabs  The remaining tabs.
 		 */
-		public static function plugin_add_tabs( $nonmenu_tabs ) {
+		public static function plugin_add_tabs( $nonmenu_tabs ) : array {
 
 			// Bail if disabled.
 			if ( ! self::enabled() ) {
@@ -606,7 +606,8 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 			}
 
 			// Set an array of tabs to be removed with optional filter.
-			if ( false === $remove = apply_filters( 'core_blocker_bulk_items', [ 'featured', 'popular', 'recommended', 'favorites', 'beta' ] ) ) {
+            $remove = apply_filters( 'core_blocker_bulk_items', [ 'featured', 'popular', 'recommended', 'favorites', 'beta' ] );
+			if ( false === $remove ) {
 				return $nonmenu_tabs;
 			}
 
@@ -626,16 +627,23 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 
 if ( ! class_exists( __NAMESPACE__ . '\CoreBlocker_WP_Error' ) ) {
 
-	class Core_Blocker_WP_Error extends WP_Error {
-
-		public function __tostring() {
+    /**
+     * Class Core_Blocker_WP_Error
+     *
+     * @since 1.0.0
+     */
+	class Core_Blocker_WP_Error extends \WP_Error {
+        /**
+         * Return plain error message
+         *
+         * @return string
+         */
+		public function __toString() {
 			$data = $this->get_error_data();
 
-			return $data['return'];
+			return (string) $data['return'];
 		}
-
 	}
-
 }
 
 // Instantiate our plugin.
