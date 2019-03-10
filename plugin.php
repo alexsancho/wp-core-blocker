@@ -27,7 +27,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -508,7 +508,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 
 			foreach ( $installed as $lang ) {
 
-				// Try to mimick the data that wordpress puts into 'available_translations' transient
+				// Try to mimick the data that WordPress puts into 'available_translations' transient
 				$settings = [
 					'language' => $lang,
 					'iso'      => [ $lang ],
@@ -531,9 +531,9 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @param  array $items All the items being passed for update.
 		 *
-		 * @return array         An empty array, or the original items if not enabled.
+		 * @return bool|array         An empty array, or the original items if not enabled.
 		 */
-		public static function remove_update_array( $items ) : array {
+		public static function remove_update_array( $items ) {
 			return ! self::enabled() ? $items : [];
 		}
 
@@ -542,9 +542,9 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @param mixed $current Empty array.
 		 *
-		 * @return array Lookalike data which is stored in site transient 'update_plugins'
+		 * @return bool|array Lookalike data which is stored in site transient 'update_plugins'
 		 */
-		public static function remove_plugin_updates( $current ) : array {
+		public static function remove_plugin_updates( $current ) {
 			if ( ! $current ) {
 				$current               = new \stdClass();
 				$current->last_checked = time();
