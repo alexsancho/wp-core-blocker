@@ -218,7 +218,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @return string `<img>` tag for the user's avatar.
 		 */
-		public static function replace_gravatar( $avatar, $id_or_email, $size, $default, $alt ) : string {
+		public static function replace_gravatar( $avatar, $id_or_email, $size, $default, $alt ) {
 
 			// Bail if disabled.
 			if ( ! self::enabled() ) {
@@ -240,7 +240,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @return string               Updated list with images removed
 		 */
-		public static function default_avatar( $avatar_list ) : string {
+		public static function default_avatar( $avatar_list ) {
 
 			// Bail if disabled.
 			if ( ! self::enabled() ) {
@@ -259,7 +259,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @return string The URL to redirect to.
 		 */
-		protected static function get_redirect() : string {
+		protected static function get_redirect() {
 
 			// Return the args for the actual redirect.
 			$redirect = remove_query_arg( [
@@ -298,7 +298,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @return array The user's filtered capabilities.
 		 */
-		public static function prevent_auto_updates( $caps, $cap ) : array {
+		public static function prevent_auto_updates( $caps, $cap ) {
 
 			// Check for being enabled and look for specific cap requirements.
 			if ( self::enabled() && \in_array( $cap, [ 'install_plugins', 'install_themes', 'update_plugins', 'update_themes', 'update_core' ], false ) ) {
@@ -490,7 +490,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
          *
          * @return array
          */
-		public static function available_translations() : array {
+		public static function available_translations() {
 
 			// include long predefined list of all available languages
 			// It includes a function: core_blocker_get_languages()
@@ -533,7 +533,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @return array         An empty array, or the original items if not enabled.
 		 */
-		public static function remove_update_array( $items ) : array {
+		public static function remove_update_array( $items ) {
 			return ! self::enabled() ? $items : [];
 		}
 
@@ -544,7 +544,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @return array Lookalike data which is stored in site transient 'update_plugins'
 		 */
-		public static function remove_plugin_updates( $current ) : array {
+		public static function remove_plugin_updates( $current ) {
 			if ( ! $current ) {
 				$current               = new \stdClass();
 				$current->last_checked = time();
@@ -568,7 +568,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @return array $actions  The remaining actions
 		 */
-		public static function remove_bulk_actions( $actions ) : array {
+		public static function remove_bulk_actions( $actions ) {
 
 			// Bail if disabled.
 			if ( ! self::enabled() ) {
@@ -598,7 +598,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Core_Blocker' ) ) {
 		 *
 		 * @return array $nonmenu_tabs  The remaining tabs.
 		 */
-		public static function plugin_add_tabs( $nonmenu_tabs ) : array {
+		public static function plugin_add_tabs( $nonmenu_tabs ) {
 
 			// Bail if disabled.
 			if ( ! self::enabled() ) {
